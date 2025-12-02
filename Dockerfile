@@ -15,8 +15,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 复制依赖文件
 COPY requirements.txt .
 
-# 使用清华源加速安装 Python 依赖
-RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+# 升级 pip 并安装 Python 依赖
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 # 复制项目文件
 COPY . .
