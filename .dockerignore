@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 日志和临时文件
+*.log
+*.png
+*.html
+captcha*.png
+page_*.png
+
+# Git
+.git/
+.gitignore
+
+# 配置文件（避免泄露敏感信息）
+config.json
+
+# GitHub Actions
+.github/
+
+# 说明文档
+README.md
