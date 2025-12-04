@@ -5,25 +5,38 @@ FROM mcr.microsoft.com/playwright:v1.40.0-jammy
 WORKDIR /app
 
 # 设置时区为上海
-RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+ENV TZ=Asia/Shanghai
+ENV DEBIAN_FRONTEND=noninteractive
 
-# 1. 安装系统依赖 (关键：增加了 python3-pip)
+# 安装系统依赖
 RUN apt-get update && apt-get install -y \
     python3-pip \
+    python3-venv \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    libnotify4 \
+    libxtst6 \
+    libxss1 \
+    libgconf-2-4 \
+    libgtk-3-0 \
+    fonts-liberation \
+    wget \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. 复制依赖文件
+# 复制依赖文件
 COPY requirements.txt .
 
-# 3. 安装 Python 依赖
-# 关键：增加了 --break-system-packages 以解决 Ubuntu 22.04+ 的限制
-RUN python3 -m pip install --no-cache-dir --upgrade pip --break-system-packages && \
-    python3 -m pip install --no-cache-dir -r requirements.txt --break-system-packages
+# 创建虚拟环境并安装Python依赖
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# 4. 复制项目所有代码
+# 升级pip并安装依赖
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# 复制项目所有代码
 COPY . .
 
 # 启动命令
-CMD ["python3", "main.py"]
+CMD ["python", "main.py"]
