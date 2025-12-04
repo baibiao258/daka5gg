@@ -32,6 +32,8 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=latest
+            type=raw,value=v${{ github.run_number }}
+            type=raw,value=v${{ github.run_number }}-${{ github.sha }}
             type=sha,prefix={{branch}}-
 
       - name: 🔧 Set up Docker Buildx
@@ -50,12 +52,19 @@ jobs:
       - name: ✅ Image built successfully
         run: |
           echo "✅ Docker 镜像构建成功！"
-          echo "📦 镜像地址: ghcr.io/${{ github.repository }}:latest"
+          echo ""
+          echo "📦 生成的镜像标签："
+          echo "  - ghcr.io/${{ github.repository }}:latest"
+          echo "  - ghcr.io/${{ github.repository }}:v${{ github.run_number }}"
+          echo "  - ghcr.io/${{ github.repository }}:v${{ github.run_number }}-${{ github.sha }}"
+          echo ""
+          echo "💡 建议使用版本标签："
+          echo "  ghcr.io/${{ github.repository }}:v${{ github.run_number }}"
           echo ""
           echo "🚀 下一步："
           echo "1. 登录 Leaflow 平台"
           echo "2. 创建新应用，使用以下镜像地址："
-          echo "   ghcr.io/${{ github.repository }}:latest"
+          echo "   ghcr.io/${{ github.repository }}:v${{ github.run_number }}"
           echo "3. 配置环境变量："
           echo "   - CHECKIN_USERNAME"
           echo "   - CHECKIN_PASSWORD"
@@ -63,3 +72,5 @@ jobs:
           echo "4. 设置资源限制："
           echo "   - CPU: 500m-1000m"
           echo "   - Memory: 1024 MiB"
+          echo ""
+          echo "⚠️  注意：不推荐使用 latest 标签，建议使用明确的版本标签"
